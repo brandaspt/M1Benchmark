@@ -45,204 +45,14 @@ If you are presenting one question at a time, just add one point or not to the u
 
 */
 
-/* const questions = [
-  {
-    category: "Science: Computers",
-    type: "multiple",
-    difficulty: "easy",
-    question: "What does CPU stand for?",
-    correct_answer: "Central Processing Unit",
-    incorrect_answers: [
-      "Central Process Unit",
-      "Computer Personal Unit",
-      "Central Processor Unit",
-    ],
-  },
-  {
-    category: "Science: Computers",
-    type: "multiple",
-    difficulty: "easy",
-    question:
-      "In the programming language Java, which of these keywords would you put on a variable to make sure it doesn't get modified?",
-    correct_answer: "Final",
-    incorrect_answers: ["Static", "Private", "Public"],
-  },
-  {
-    category: "Science: Computers",
-    type: "boolean",
-    difficulty: "easy",
-    question: "The logo for Snapchat is a Bell.",
-    correct_answer: "False",
-    incorrect_answers: ["True"],
-  },
-  {
-    category: "Science: Computers",
-    type: "boolean",
-    difficulty: "easy",
-    question:
-      "Pointers were not used in the original C programming language; they were added later on in C++.",
-    correct_answer: "False",
-    incorrect_answers: ["True"],
-  },
-  {
-    category: "Science: Computers",
-    type: "multiple",
-    difficulty: "easy",
-    question:
-      "What is the most preferred image format used for logos in the Wikimedia database?",
-    correct_answer: ".svg",
-    incorrect_answers: [".png", ".jpeg", ".gif"],
-  },
-  {
-    category: "Science: Computers",
-    type: "multiple",
-    difficulty: "easy",
-    question: "In web design, what does CSS stand for?",
-    correct_answer: "Cascading Style Sheet",
-    incorrect_answers: [
-      "Counter Strike: Source",
-      "Corrective Style Sheet",
-      "Computer Style Sheet",
-    ],
-  },
-  {
-    category: "Science: Computers",
-    type: "multiple",
-    difficulty: "easy",
-    question:
-      "What is the code name for the mobile operating system Android 7.0?",
-    correct_answer: "Nougat",
-    incorrect_answers: ["Ice Cream Sandwich", "Jelly Bean", "Marshmallow"],
-  },
-  {
-    category: "Science: Computers",
-    type: "multiple",
-    difficulty: "easy",
-    question: "On Twitter, what is the character limit for a Tweet?",
-    correct_answer: "140",
-    incorrect_answers: ["120", "160", "100"],
-  },
-  {
-    category: "Science: Computers",
-    type: "boolean",
-    difficulty: "easy",
-    question: "Linux was first created as an alternative to Windows XP.",
-    correct_answer: "False",
-    incorrect_answers: ["True"],
-  },
-  {
-    category: "Science: Computers",
-    type: "multiple",
-    difficulty: "easy",
-    question:
-      "Which programming language shares its name with an island in Indonesia?",
-    correct_answer: "Java",
-    incorrect_answers: ["Python", "C", "Jakarta"],
-  },
-]
-
-const correctAnswers = questions.map((question) => question.correct_answer)
-
-const questionsSection = document.getElementById("questions-section")
-
-const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[array[i], array[j]] = [array[j], array[i]]
-  }
-}
-
-const prepareGame = () => {
-  questions.forEach((question, index) => {
-    const answers = [...question.incorrect_answers]
-    answers.push(question.correct_answer)
-    shuffleArray(answers)
-
-    const newQuestionDiv = document.createElement("div")
-    newQuestionDiv.classList.add("question-container")
-
-    const newQuestionH3 = document.createElement("h3")
-    newQuestionH3.innerText = question.question
-    newQuestionDiv.appendChild(newQuestionH3)
-
-    const newAnswersContainer = document.createElement("div")
-    newAnswersContainer.classList.add("answers-container")
-
-    answers.forEach((answer, index2) => {
-      if (index2 === 0) {
-        newAnswersContainer.innerHTML += `<label><input type="radio" name="question${index}" checked />${answer}</label>`
-      } else {
-        newAnswersContainer.innerHTML += `<label><input type="radio" name="question${index}" />${answer}</label>`
-      }
-    })
-    newQuestionDiv.appendChild(newAnswersContainer)
-    questionsSection.appendChild(newQuestionDiv)
-  })
-  questionsSection.innerHTML += `<section id="submit-section"><button type="button" id="submit-answers-btn">Submit</button></section>`
-  document
-    .getElementById("submit-answers-btn")
-    .addEventListener("click", displayResult)
-}
-
-const displayResult = () => {
-  const allAnswers = document.querySelectorAll("input")
-  const userAnswers = []
-  for (let i = 0; i < allAnswers.length; i++) {
-    if (allAnswers[i].checked) {
-      console.log(allAnswers[i])
-      userAnswers.push(allAnswers[i].labels[0].innerText)
-    }
-  }
-
-  let correctAnswers = 0
-  for (let i = 0; i < userAnswers.length; i++) {
-    if (userAnswers[i] === questions[i].correct_answer) {
-      correctAnswers++
-    }
-  }
-
-  // [firstQuestionAnswers DOM Element, secondQuestionAnswers DOM Element, thirdQuestionAnswers DOM El,...]
-  const allAnswerContainers = document.querySelectorAll(".answers-container")
-
-  // Cycle through the array with all answer containers
-  for (let i = 0; i < allAnswerContainers.length; i++) {
-    // Question i's answers:
-    // First iteration: [Q0FirstAnswer DOM El, Q0SecondAnswer DOM El, ...]
-    // Second iteration: [Q1FirstAnswer DOM El, Q1SecondAnswer DOM El, ...]
-    // Third iteration: [Q2FirstAnswer DOM El, Q2SecondAnswer DOM El, ...]
-    // ...
-    let currentAnswers = allAnswerContainers[i].children
-
-    // Cycle through the array with answers
-    for (let j = 0; j < currentAnswers.length; j++) {
-      // If current answer's innerText is equal to first question's correct answer apply 'correct-answer' class
-      if (currentAnswers[j].innerText === questions[i].correct_answer) {
-        currentAnswers[j].classList.add("correct-answer")
-      }
-    }
-  }
-
-  const submitSection = document.getElementById("submit-section")
-  submitSection.innerHTML = `<h2>Correct answers: ${correctAnswers}/${userAnswers.length}</h2><button id="play-again-btn">PLAY AGAIN</button>`
-  document.getElementById("play-again-btn").addEventListener("click", resetGame)
-}
-
-const resetGame = () => {
-  document.getElementById("submit-section").remove()
-  questionsSection.innerText = ""
-  prepareGame()
-}
-
-prepareGame() */
-
 const topicsArr = [
   {
     id: 9,
-    name: "General Knowledge",
+    name: "General knowledge",
   },
   {
     id: 11,
-    name: "Entertainment: Film",
+    name: "Cinema",
   },
   {
     id: 17,
@@ -261,14 +71,17 @@ const topicsArr = [
 // Global variables
 let fetchedQuestions = []
 let correctAnswers = []
-let userAnswers = []
 let userScore = 0
 let currentQuestion = 0
 
 // Page Elements
-const questionNumberH2 = document.getElementById("question-number")
+let currentQuestionH3
+let allQuestionContainers
+let allAnswerBtns
+let nextQuestionBtn
 const topicsSection = document.getElementById("topics-section")
 const questionsSection = document.getElementById("questions-section")
+const resultsSection = document.getElementById("results-section")
 
 // First UI
 const topicsScreen = () => {
@@ -306,15 +119,12 @@ const getQuestions = async (chosenTopic) => {
     if (response.ok) {
       const jsonResponse = await response.json()
       fetchedQuestions = jsonResponse.results
-      console.log(fetchedQuestions)
       fetchedQuestions.forEach((fetchedQuestion) => {
         const tempSpan = document.createElement("span")
         tempSpan.innerHTML = fetchedQuestion.correct_answer
         correctAnswers.push(tempSpan.innerHTML)
         tempSpan.remove()
       })
-      console.log(correctAnswers)
-      // return fetchedQuestions
     }
   } catch (error) {
     console.log(error)
@@ -323,6 +133,11 @@ const getQuestions = async (chosenTopic) => {
 
 // Creates all question container elements (hidden)
 const createQuestionEls = () => {
+  // Current question h3
+  questionsSection.innerHTML += `<h3 id="current-question">${
+    currentQuestion + 1
+  }/${fetchedQuestions.length}</h3>`
+
   for (const question of fetchedQuestions) {
     const answers = [...question.incorrect_answers]
     answers.push(question.correct_answer)
@@ -351,18 +166,28 @@ const createQuestionEls = () => {
     newQuestionDiv.appendChild(newAnswersContainer)
     questionsSection.appendChild(newQuestionDiv)
   }
-  playGame()
+  // Next question btn
+  questionsSection.innerHTML += `<button id="next-question-btn">next question</button>`
+  nextQuestionBtn = document.getElementById("next-question-btn")
+
+  // Get current question element
+  currentQuestionH3 = document.getElementById("current-question")
+
+  // Get all answer btns and apply event listener
+  allAnswerBtns = document.querySelectorAll(".answer-btn")
+  allAnswerBtns.forEach((answerBtn) => {
+    answerBtn.addEventListener("click", getAnswer)
+  })
+
+  // Get all question containers
+  allQuestionContainers = document.querySelectorAll(".question-container")
+
+  startGame()
 }
 
-const playGame = () => {
-  // Clear topics section
-  topicsSection.innerText = ""
-
-  // Apply event listener to answer btns
-  const allAnswerBtns = document.querySelectorAll(".answer-btn")
-  allAnswerBtns.forEach((answerBtn) => {
-    answerBtn.addEventListener("click", nextQuestion)
-  })
+const startGame = () => {
+  // Hide topics section
+  topicsSection.classList.add("hidden")
 
   // Show first question
   questionsSection
@@ -370,13 +195,74 @@ const playGame = () => {
     .classList.remove("hidden")
 }
 
-const nextQuestion = (event) => {
+const getAnswer = (event) => {
   const selectedAnswer = event.currentTarget
-  userAnswers.push(selectedAnswer.innerHTML)
+  // userAnswers.push(selectedAnswer.innerHTML)
   selectedAnswer.classList.add("selected-answer")
   if (selectedAnswer.innerHTML === correctAnswers[currentQuestion]) {
     selectedAnswer.classList.add("correct-answer")
+    userScore++
   }
+  const parentEl = selectedAnswer.parentElement
+  const answerEls = parentEl.querySelectorAll(".answer-btn")
+  answerEls.forEach((answerEl) => {
+    if (answerEl.innerHTML === correctAnswers[currentQuestion]) {
+      answerEl.classList.add("correct-answer")
+    }
+  })
+
+  // Disable current answer btns
+  const currentAnswerBtns = event.currentTarget.parentElement.querySelectorAll(
+    ".answer-btn"
+  )
+  currentAnswerBtns.forEach((btn) => {
+    btn.removeEventListener("click", getAnswer)
+  })
+
+  // Enable next question btn
+  nextQuestionBtn.addEventListener("click", nextQuestion)
+}
+
+const nextQuestion = () => {
+  // Hide current question
+  allQuestionContainers[currentQuestion].classList.add("hidden")
+
+  // Increase current question and check if it's last
+  currentQuestion++
+  if (currentQuestion === fetchedQuestions.length) {
+    nextQuestionBtn.classList.add("hidden")
+    currentQuestionH3.classList.add("hidden")
+    displayResult()
+  } else {
+    document
+      .querySelectorAll(".question-container")
+      [currentQuestion].classList.remove("hidden")
+    nextQuestionBtn.removeEventListener("click", nextQuestion)
+    currentQuestionH3.innerHTML = `${currentQuestion + 1}/${
+      fetchedQuestions.length
+    }`
+  }
+}
+
+const displayResult = () => {
+  resultsSection.innerHTML = `<h2>Correct Answers: ${userScore}/${fetchedQuestions.length}</h2><button id="play-again-btn">PLAY AGAIN</button>`
+  document.getElementById("play-again-btn").addEventListener("click", resetGame)
+}
+
+const resetGame = () => {
+  fetchedQuestions = []
+  correctAnswers = []
+  userScore = 0
+  currentQuestion = 0
+  currentQuestionH3.innerHTML = ""
+  allQuestionContainers.innerHTML = ""
+  allAnswerBtns.innerHTML = ""
+  nextQuestionBtn.innerHTML = ""
+  resultsSection.innerHTML = ""
+  topicsSection.innerHTML = ""
+  topicsSection.classList.remove("hidden")
+  questionsSection.innerHTML = ""
+  topicsScreen()
 }
 
 // Helper shuffle array
@@ -386,3 +272,5 @@ const shuffleArray = (array) => {
     ;[array[i], array[j]] = [array[j], array[i]]
   }
 }
+
+topicsScreen()

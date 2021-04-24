@@ -1,12 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap");
+
 * {
   box-sizing: border-box;
   text-align: center;
+  font-family: "Roboto", sans-serif;
 }
 
 button {
   height: 50px;
-  width: 200px;
-  background-color: rgb(160, 235, 235);
+  width: 400px;
+  background-color: rgb(241, 241, 241);
   border: 2px solid rgb(98, 176, 228);
   font-size: 1.1em;
   color: dimgray;
@@ -48,10 +51,17 @@ h3 {
 }
 
 .selected-answer {
-  background-color: rgba(211, 106, 106, 0.555);
+  background-color: rgba(255, 166, 166, 0.555);
 }
 
 .correct-answer {
-  color: green;
-  font-weight: bold;
+  background-color: rgb(159, 224, 159);
+}
+
+#next-question-btn,
+.topic-btn,
+#play-again-btn {
+  background-color: rgb(98, 176, 228);
+  color: white;
+  width: 200px;
 }
