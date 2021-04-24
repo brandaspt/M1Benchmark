@@ -141,6 +141,8 @@ const questions = [
   },
 ]
 
+const correctAnswers = questions.map((question) => question.correct_answer)
+
 const questionsSection = document.getElementById("questions-section")
 
 const shuffleArray = (array) => {
