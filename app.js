@@ -45,7 +45,7 @@ If you are presenting one question at a time, just add one point or not to the u
 
 */
 
-const questions = [
+/* const questions = [
   {
     category: "Science: Computers",
     type: "multiple",
@@ -233,4 +233,156 @@ const resetGame = () => {
   prepareGame()
 }
 
-prepareGame()
+prepareGame() */
+
+const topicsArr = [
+  {
+    id: 9,
+    name: "General Knowledge",
+  },
+  {
+    id: 11,
+    name: "Entertainment: Film",
+  },
+  {
+    id: 17,
+    name: "Science & Nature",
+  },
+  {
+    id: 21,
+    name: "Sports",
+  },
+  {
+    id: 22,
+    name: "Geography",
+  },
+]
+
+// Global variables
+let fetchedQuestions = []
+let correctAnswers = []
+let userAnswers = []
+let userScore = 0
+let currentQuestion = 0
+
+// Page Elements
+const questionNumberH2 = document.getElementById("question-number")
+const topicsSection = document.getElementById("topics-section")
+const questionsSection = document.getElementById("questions-section")
+
+// First UI
+const topicsScreen = () => {
+  topicsSection.innerHTML += `<h2>Choose a topic</h2>`
+
+  for (const topic of topicsArr) {
+    topicsSection.innerHTML += `<button class="topic-btn">${topic.name}</button>`
+  }
+
+  const topicBtns = document.querySelectorAll(".topic-btn")
+  topicBtns.forEach((btn) => {
+    btn.addEventListener("click", prepareGame)
+  })
+}
+
+// Get topic and trigger AJAX
+const prepareGame = (event) => {
+  let chosenTopic = event.currentTarget.innerText
+  for (const topic of topicsArr) {
+    if (topic.name === chosenTopic) {
+      chosenTopic = topic.id
+      break
+    }
+  }
+  getQuestions(chosenTopic).then((fetchedQuestions) =>
+    createQuestionEls(fetchedQuestions)
+  )
+}
+
+// AJAX func gets 10 quentions from API for the chose topic
+const getQuestions = async (chosenTopic) => {
+  const urlToFetch = `https://opentdb.com/api.php?amount=10&category=${chosenTopic}`
+  try {
+    const response = await fetch(urlToFetch)
+    if (response.ok) {
+      const jsonResponse = await response.json()
+      fetchedQuestions = jsonResponse.results
+      console.log(fetchedQuestions)
+      fetchedQuestions.forEach((fetchedQuestion) => {
+        const tempSpan = document.createElement("span")
+        tempSpan.innerHTML = fetchedQuestion.correct_answer
+        correctAnswers.push(tempSpan.innerHTML)
+        tempSpan.remove()
+      })
+      console.log(correctAnswers)
+      // return fetchedQuestions
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// Creates all question container elements (hidden)
+const createQuestionEls = () => {
+  for (const question of fetchedQuestions) {
+    const answers = [...question.incorrect_answers]
+    answers.push(question.correct_answer)
+    // Shuffle array
+    shuffleArray(answers)
+
+    // Create a div that will contain the question and its answers
+    const newQuestionDiv = document.createElement("div")
+    newQuestionDiv.classList.add("question-container", "hidden")
+
+    // Create h3 for the question and append it to the above div
+    const newQuestionH3 = document.createElement("h3")
+    newQuestionH3.innerHTML = question.question
+    newQuestionDiv.appendChild(newQuestionH3)
+
+    // Create a div to contain the answers
+    const newAnswersContainer = document.createElement("div")
+    newAnswersContainer.classList.add("answers-container")
+
+    // Add each answer to the above div
+    answers.forEach((answer) => {
+      newAnswersContainer.innerHTML += `<button class="answer-btn">${answer}</button>`
+    })
+
+    // Add answers container to question container
+    newQuestionDiv.appendChild(newAnswersContainer)
+    questionsSection.appendChild(newQuestionDiv)
+  }
+  playGame()
+}
+
+const playGame = () => {
+  // Clear topics section
+  topicsSection.innerText = ""
+
+  // Apply event listener to answer btns
+  const allAnswerBtns = document.querySelectorAll(".answer-btn")
+  allAnswerBtns.forEach((answerBtn) => {
+    answerBtn.addEventListener("click", nextQuestion)
+  })
+
+  // Show first question
+  questionsSection
+    .querySelector(".question-container")
+    .classList.remove("hidden")
+}
+
+const nextQuestion = (event) => {
+  const selectedAnswer = event.currentTarget
+  userAnswers.push(selectedAnswer.innerHTML)
+  selectedAnswer.classList.add("selected-answer")
+  if (selectedAnswer.innerHTML === correctAnswers[currentQuestion]) {
+    selectedAnswer.classList.add("correct-answer")
+  }
+}
+
+// Helper shuffle array
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
+  }
+}
