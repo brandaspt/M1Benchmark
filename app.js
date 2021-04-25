@@ -69,6 +69,7 @@ const topicsArr = [
 ]
 
 // Global variables
+let currentTopic
 let fetchedQuestions = []
 let correctAnswers = []
 let userScore = 0
@@ -100,6 +101,7 @@ const topicsScreen = () => {
 // Get topic and trigger AJAX
 const prepareGame = (event) => {
   let chosenTopic = event.currentTarget.innerText
+  currentTopic = chosenTopic
   for (const topic of topicsArr) {
     if (topic.name === chosenTopic) {
       chosenTopic = topic.id
@@ -111,7 +113,7 @@ const prepareGame = (event) => {
   )
 }
 
-// AJAX func gets 10 quentions from API for the chose topic
+// AJAX func gets 10 questions from API for the chose topic
 const getQuestions = async (chosenTopic) => {
   const urlToFetch = `https://opentdb.com/api.php?amount=10&category=${chosenTopic}`
   try {
@@ -133,8 +135,13 @@ const getQuestions = async (chosenTopic) => {
 
 // Creates all question container elements (hidden)
 const createQuestionEls = () => {
+  // Current topic
+  document.querySelector(
+    "header"
+  ).innerHTML += `<h3 id="current-topic">${currentTopic}</h3>`
+
   // Current question h3
-  questionsSection.innerHTML += `<h3 id="current-question">${
+  document.querySelector("header").innerHTML += `<h3 id="current-question">${
     currentQuestion + 1
   }/${fetchedQuestions.length}</h3>`
 
@@ -190,6 +197,7 @@ const startGame = () => {
   topicsSection.classList.add("hidden")
 
   // Show first question
+  questionsSection.classList.remove("hidden")
   questionsSection
     .querySelector(".question-container")
     .classList.remove("hidden")
@@ -197,7 +205,6 @@ const startGame = () => {
 
 const getAnswer = (event) => {
   const selectedAnswer = event.currentTarget
-  // userAnswers.push(selectedAnswer.innerHTML)
   selectedAnswer.classList.add("selected-answer")
   if (selectedAnswer.innerHTML === correctAnswers[currentQuestion]) {
     selectedAnswer.classList.add("correct-answer")
@@ -231,7 +238,9 @@ const nextQuestion = () => {
   currentQuestion++
   if (currentQuestion === fetchedQuestions.length) {
     nextQuestionBtn.classList.add("hidden")
-    currentQuestionH3.classList.add("hidden")
+    currentQuestionH3.remove()
+    questionsSection.classList.add("hidden")
+    resultsSection.classList.remove("hidden")
     displayResult()
   } else {
     document
@@ -250,18 +259,20 @@ const displayResult = () => {
 }
 
 const resetGame = () => {
+  currentTopic = ""
   fetchedQuestions = []
   correctAnswers = []
   userScore = 0
   currentQuestion = 0
-  currentQuestionH3.innerHTML = ""
   allQuestionContainers.innerHTML = ""
   allAnswerBtns.innerHTML = ""
   nextQuestionBtn.innerHTML = ""
   resultsSection.innerHTML = ""
   topicsSection.innerHTML = ""
   topicsSection.classList.remove("hidden")
+  resultsSection.classList.add("hidden")
   questionsSection.innerHTML = ""
+  document.getElementById("current-topic").remove()
   topicsScreen()
 }
 
