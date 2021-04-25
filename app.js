@@ -174,7 +174,7 @@ const createQuestionEls = () => {
     questionsSection.appendChild(newQuestionDiv)
   }
   // Next question btn
-  questionsSection.innerHTML += `<button id="next-question-btn">next question</button>`
+  questionsSection.innerHTML += `<button id="next-question-btn">Next question</button>`
   nextQuestionBtn = document.getElementById("next-question-btn")
 
   // Get current question element
