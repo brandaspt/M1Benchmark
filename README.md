@@ -1,6 +1,6 @@
 # Project Name
 
-> Wanderlust
+> QUIZ GAME
 
 ## Table of contents
 
@@ -14,7 +14,7 @@
 
 ## General info
 
-Quiz game undertaken during Strive School's Full Stack Developer Course.
+Quiz game project undertaken during Strive School's Full Stack Developer Course.
 
 ## Screenshots
 
